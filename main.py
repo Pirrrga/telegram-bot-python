@@ -59,9 +59,9 @@ def start(message):
     user_id = str(message.from_user.id)
     get_user_data(user_id)
     text = (
-        "🌟 *Финансовый Помощник* 🌟\n\n"
+        "🌟 ФИНАНСОВЫЙ ПОМОЩНИК 🌟\n\n"
         f"Привет, {message.from_user.first_name}! 👋\n\n"
-        "📌 *Команды:*\n"
+        "📌 КОМАНДЫ:\n"
         "/balance - баланс 💰\n"
         "/history - история 📜\n"
         "/stats - статистика 📊\n"
@@ -73,9 +73,9 @@ def start(message):
         "/goals - мои цели 🎯\n"
         "/delete_last - удалить последнюю 🗑️\n"
         "/reset - сбросить всё 🔄\n\n"
-        "💡 *Как записывать:*\n`+1000 Зарплата` или `-500 Продукты`"
+        "💡 КАК ЗАПИСЫВАТЬ:\n+1000 Зарплата или -500 Продукты"
     )
-    bot.reply_to(message, text, parse_mode='Markdown')
+    bot.reply_to(message, text)
 
 @bot.message_handler(commands=['balance'])
 def balance(message):
