@@ -8,7 +8,7 @@ from commands import register_commands
 load_dotenv()
 
 # Replace 'TELEGRAM_BOT_TOKEN' with the token you received from BotFather
-TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+TOKEN = os.getenv('')
 try:
     bot = telebot.TeleBot(TOKEN)
     register_commands(bot)
