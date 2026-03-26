@@ -1,10 +1,9 @@
 import telebot
 import json
 import os
-from datetime import datetime, timedelta
-import calendar
+from datetime import datetime
 
-# ========== ТОКЕН ИЗ ПЕРЕМЕННЫХ ОКРУЖЕНИЯ (как и было) ==========
+# ТОКЕН БЕРЁМ ИЗ ПЕРЕМЕННЫХ ОКРУЖЕНИЯ (добавим позже)
 TOKEN = os.environ.get('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 DATA_FILE = 'finance_data.json'
