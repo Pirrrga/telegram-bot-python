@@ -3,12 +3,10 @@ import json
 import os
 from datetime import datetime, timedelta
 
-# ========== ТОКЕН ИЗ ПЕРЕМЕННЫХ ==========
 TOKEN = os.environ.get('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 DATA_FILE = 'finance_data.json'
 
-# ========== РАБОТА С ДАННЫМИ ==========
 def load_data():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
@@ -81,7 +79,7 @@ def get_daily_stats(transactions):
                 today_expense += t['amount']
     return today_income, today_expense
 
-def get_advice(balance, month_expense, budget):
+def get_advice(balance):
     if balance < 0:
         return "⚠️ У тебя отрицательный баланс! Срочно сократи расходы!"
     elif balance < 5000:
@@ -108,7 +106,6 @@ def get_budget_advice(month_expense, budget):
     else:
         return "🎯 Отлично! Ты хорошо контролируешь расходы."
 
-# ========== КОМАНДЫ ==========
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = str(message.from_user.id)
@@ -169,7 +166,7 @@ def balance(message):
     user_data = get_user_data(user_id)
     bal = user_data['balance']
     month_income, month_expense = get_month_stats(user_data['transactions'])
-    advice = get_advice(bal, month_expense, user_data.get('budget'))
+    advice = get_advice(bal)
     
     if bal >= 0:
         text = f"💰 БАЛАНС: +{bal} руб.\n\n📊 ЗА МЕСЯЦ:\n✅ Доходы: +{month_income} руб.\n❌ Расходы: -{month_expense} руб.\n📈 Итог: {month_income - month_expense} руб.\n\n{advice}"
@@ -401,7 +398,6 @@ def confirm_reset(message):
     else:
         bot.reply_to(message, "✅ СБРОС ОТМЕНЁН")
 
-# ========== ОБРАБОТКА СООБЩЕНИЙ (БЫСТРАЯ ЗАПИСЬ) ==========
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_id = str(message.from_user.id)
@@ -432,7 +428,6 @@ def handle_message(message):
         user_data['transactions'].append(transaction)
         save_user_data(user_id, user_data)
         
-        # Проверка бюджета при расходе
         budget_warning = ""
         if t_type == 'expense' and user_data.get('budget'):
             month_expense = get_month_stats(user_data['transactions'])[1]
@@ -442,7 +437,6 @@ def handle_message(message):
             elif month_expense > budget * 0.8:
                 budget_warning = f"\n\n⚡ СОВЕТ: Осталось всего {budget - month_expense} руб. бюджета на этот месяц!"
         
-        # Разные реакции в зависимости от суммы
         if amount >= 10000:
             reaction = "🎉 Ого, крупная сумма!"
         elif amount >= 5000:
@@ -470,9 +464,6 @@ def handle_message(message):
         )
         bot.reply_to(message, text)
 
-# ========== ЗАПУСК ==========
 if __name__ == "__main__":
     print("🤖 ФИНАНСОВЫЙ БОТ ЗАПУЩЕН!")
-    print("✅ Все команды загружены")
-    print("✅ Ожидание сообщений...")
     bot.polling(none_stop=True)
